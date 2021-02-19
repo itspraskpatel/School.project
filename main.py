@@ -1,7 +1,12 @@
 ''' ********************************School project********************** '''
+import datetime
 import time
 import sys
 import mysql.connector as pysq
+#*********SQL*******
+conn=pysq.connect(host='localhost',user='root',passwd='')
+#print(conn.is_connected())
+crr=conn.cursor()
 
 print('AIRPORTS ARE RUNNING AT LOW CAPACITYL')
 print("**********DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT")
@@ -15,8 +20,6 @@ j = ["1. DELHI           AGRA                12HRS                222",
      '7. AGRA           BHOPAL                6HRS                758',
      '8. DELHI          MUMBAI                7HRS                976']
 farel = [1111, 2222, 3333, 4444, 5555, 6666, 7777, 8888]
-
-
 # '''print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
 # for i in j:
 #    print(i) '''
@@ -29,6 +32,9 @@ def book():
     print("=" * 80)
     try:
         b = int(input("SELECT OPTION BASED ON YOUR JOURNEY:"))
+        if b>8:
+             print("Enter appropriate option")
+             book()
     except:
         print("Enter appropriate option")
     # fare calculation
@@ -55,20 +61,31 @@ def book():
     print('2. BUSINESS CLASS')
     try:
         c = int(input("What's your Choice?:"))
+        if c>2:
+             print("=" * 80)
+             print("Enter appropriate option")
+             book()
     except:
         print("Enter appropriate option")
     print("=" * 50)
-    print("DO YOU WANT CATERING SERVICE ON YOUR JOURNEY?")
+    print("DO YOU WANT IN-FLIGHT MEAL SERVICES ON YOUR JOURNEY?")
     print('1. YES')
     print('2. NO')
     try:
         d = int(input("What's your Choice?:"))
+        if d>2:
+             print("=" * 80)
+             print("Enter appropriate option")
+             book()
+
     except:
+        print("=" * 80)
         print("Enter appropriate option")
     print("=" * 80)
     try:
         e = int(input("ENTER THE NO. OF TICKETS YOU WANT TO BOOK"))
     except:
+        print("=" * 80)
         print("Enter appropriate no. of Passengers")
     if e > 5:
         print("WE HAVE LIMITED THE AMOUNT OF PASSENGERS PER BOOKING TO 5 PEOPLE DUE TO COVID-19 OUTBREAK")
@@ -81,7 +98,7 @@ def book():
             try:
                 g = int(input("Enter Date of Birth in DDMMYYYY:"))
             except:
-                print("Enter appropriate option")
+                print("Enter appropriate value")
             h = input("Enter Gender of Passenger(M or F):")
             print("=" * 80)
             print("=" * 80)
@@ -105,6 +122,7 @@ def book():
                 print('DATE OF BIRTH: ', lst[1])
             elif len(lst) == 3:
                 print('GENDER: ', lst[2].upper())
+    print("=" * 80)
     print("ABOVE ARE THE DEATILS OF THE PASSENGER")
     if d == 1 and c == 1:
         print("Total fare: ", int(fare + fare / 10) * e)
@@ -118,27 +136,38 @@ def book():
         qq = int(input("ENTER 1 TO CONFIRM"))
     except:
         print("Enter appropriate answer")
+    print("=" * 80)
     if qq == 1:
-        print("YOUR BOOKING HAS BEEN PLACES SUCCESSFULLY")
+        print("YOUR BOOKING HAS BEEN PLACED SUCCESSFULLY")
+        bid=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        bokid=""
+        for i in bid:
+            if i.isdigit():
+                bokid+=i
+        print("YOUR BOOKING ID IS: ",bokid)
+    else:
+        print("Enter appropriate value")
+
+    crr.execute("create database if not exists airport")
+    crr.execute("use airport")
+    sql="create table if not exists booking(bookid int(14) primary key,jour_no int(1),class int(1),meal int(1),tick_no int(1),fare int(5))"
+    crr.execute(sql)
     # print(lst)
 
-
-'''                print('NAME OF PASSENGER: ',lst[0])
-            elif len(lst)==1:
-                print('DATE OF BIRTH: ',lst[1])
-            elif len(lst)==2:
-                print('GENDER: ',lst[2])'''
-
 # print(ll)
-print("=" * 80)
-print("WHAT YOU WANT TO DO ?")
-print("1.BOOKING")
-print('2.CANCELLATION')
-print('Press another ke to EXIT')
-a = int(input("Choose an Option"))
-if a == 1:
-    book()
-elif a == 2:
-    None #cancel()
-else:
-    print("THANK YOU")
+def start():
+    print("=" * 80)
+    print("WHAT YOU WANT TO DO ?")
+    print("1.BOOKING")
+    print('2.CANCELLATION')
+    print('Press another ke to EXIT')
+    a = int(input("Choose an Option"))
+    if a == 1:
+        book()
+    elif a == 2:
+        None #cancel()
+    else:
+         print("=" * 80)
+         print("Enter appropriate option")
+         start()
+start()
