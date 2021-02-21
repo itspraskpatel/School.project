@@ -194,7 +194,7 @@ def book():
     sql3="select max(sn_no) from details"
     crr.execute(sql3)
     maxx=crr.fetchone()
-    print(maxx)
+ #   print(maxx)
     fmax=0
     if maxx==(None,):
         fmax=1
@@ -217,7 +217,7 @@ def book():
         sql3="select max(sn_no) from details"
         crr.execute(sql3)
         maxx=crr.fetchone()
-        print(maxx)
+     #   print(maxx)
         fmax=0
         if maxx==(None,):
             fmax=1
@@ -225,22 +225,22 @@ def book():
             for i in maxx:
                 fmax+=i
         fmax=int(fmax+1)
-        print(fmax,"---------------------------------fmax")
+      #  print(fmax,"---------------------------------fmax")
         sql4="insert into details (sn_no,name,dob,gender,bookid)values({},'{}',{},'{}',{})"
         sql5=sql4.format(fmax,sqname,sqdob,sqgender,bokid)
-        print(sql5)
+       # print(sql5)
         crr.execute(sql5)
 
    # print("maxxxxxxxxxxxxxxxxxxxxxxxx=",fmax)
-    crr.execute("select * from booking")
-    data=crr.fetchall()
-    for i in data:
-        print(i,"____booking")
+"""crr.execute("select * from booking")
+data=crr.fetchall()
+for i in data:
+print(i,"____booking")
 
-    crr.execute("select * from details")
-    data=crr.fetchall()
-    for i in data:
-        print(i,"_____detail")
+crr.execute("select * from details")
+data=crr.fetchall()
+for i in data:
+print(i,"_____detail")"""#just to check
 
 #for another booking
 def ask():
@@ -367,7 +367,7 @@ def start():
          sys.exit()
          start()
 start()
-#hi
+
 '''
 conn.commit()
 cursor.close()
