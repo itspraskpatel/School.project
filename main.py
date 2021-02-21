@@ -4,9 +4,9 @@ import time
 import sys
 import mysql.connector as pysq
 #setting up sql
-conn=pysq.connect(host='localhost',user='root',passwd='')
+#conn=pysq.connect(host='localhost',user='root',passwd='')
 #print(conn.is_connected()) will be True
-crr=conn.cursor()
+#crr=conn.cursor()
 
 print('AIRPORTS ARE RUNNING AT LOW CAPACITY DUE TO THE PANDEMIC')
 print("**********DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT")
@@ -29,6 +29,12 @@ farel = [1111, 2222, 3333, 4444, 5555, 6666, 7777, 8888]
 
 #crating function for booking
 def book():
+    #setting up sql
+    conn=pysq.connect(host='localhost',user='root',passwd='')
+    #print(conn.is_connected()) will be True
+    crr=conn.cursor()
+
+    #code
     print("=" * 80)
     print("WELCOME TO BOOKING SECTION")
     print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
@@ -177,12 +183,64 @@ def book():
     crr.execute("use airport")
     sql="create table if not exists booking(bookid varchar(15) primary key,jour_no int(1),class int(1),meal int(1),tick_no int(1),fare int(5))"
     crr.execute(sql)
-    sql1="insert into booking (bookid,jour_no,class,meal,tick_no,fare)values({},{},{},{},{},{})".format(bokid,b,c,d,e,sfare)
-    crr.execute(sql1)
-'''crr.execute("select * from booking")
+    sql1="insert into booking (bookid,jour_no,class,meal,tick_no,fare)values({},{},{},{},{},{})"
+    sql1_=sql1.format(bokid,b,c,d,e,sfare)
+    crr.execute(sql1_)
+    sql2="create table if not exists details(sn_no int(5) primary key,name varchar(20),dob varchar(15),gender char(1),bookid varchar(15) REFERENCES booking(bookid))"
+    crr.execute(sql2)
+ #  print(ll)
+
+#calculate max serial no.
+    sql3="select max(sn_no) from details"
+    crr.execute(sql3)
+    maxx=crr.fetchone()
+    print(maxx)
+    fmax=0
+    if maxx==(None,):
+        fmax=1
+    else:
+        for i in maxx:
+            fmax+=i
+    fmax=int(fmax+1)
+   # print(fmax,"---------------------------------fmax")
+    for m in range(len(ll)):
+        mm = ll[m].values()
+        lst = []
+        for n in mm:
+            lst.append(n)
+            if len(lst) == 1:
+                sqname=lst[0]
+            elif len(lst) == 2:
+                sqdob=lst[1]
+            elif len(lst) == 3:
+                sqgender=lst[2].upper()
+        sql3="select max(sn_no) from details"
+        crr.execute(sql3)
+        maxx=crr.fetchone()
+        print(maxx)
+        fmax=0
+        if maxx==(None,):
+            fmax=1
+        else:
+            for i in maxx:
+                fmax+=i
+        fmax=int(fmax+1)
+        print(fmax,"---------------------------------fmax")
+        sql4="insert into details (sn_no,name,dob,gender,bookid)values({},'{}',{},'{}',{})"
+        sql5=sql4.format(fmax,sqname,sqdob,sqgender,bokid)
+        print(sql5)
+        crr.execute(sql5)
+
+   # print("maxxxxxxxxxxxxxxxxxxxxxxxx=",fmax)
+    crr.execute("select * from booking")
     data=crr.fetchall()
     for i in data:
-        print(i)'''
+        print(i,"____booking")
+
+    crr.execute("select * from details")
+    data=crr.fetchall()
+    for i in data:
+        print(i,"_____detail")
 
 #for another booking
 def ask():
@@ -194,14 +252,102 @@ def ask():
         else:
             print("Enter appropriate value")
             ask()
-        crr.execute("select * from booking")
-        data=crr.fetchall()
-        for i in data:
-            print(i)
 
 #Cancellation
 def cancel():
-    a=0
+    #setting up sql
+    conn=pysq.connect(host='localhost',user='root',passwd='')
+    #print(conn.is_connected()) will be True
+    crr=conn.cursor()
+
+    print("************************************CANCELLATION*************************************")
+    cc="Enter your booking ID to cancel"
+    r=input(cc)
+    sql8="use airport"
+    crr.execute(sql8)
+    sql6="select * from booking where bookid={}"
+    sql7=sql6.format(r)
+    crr.execute(sql7)
+    ab=crr.fetchone()
+    print("Following are the details of the booking:")
+    print("="*80)
+    #journey destinations
+    j=["DELHI           AGRA                12HRS                222",
+     "AGRA           LUCKNOW              13HRS                555",
+     'LUCKNOW        BANGALORE            23HRS                230',
+     'DELHI          LUCKNOW              33HRS                556',
+     'BANGLORE       GORAKHPUR             5HRS                565',
+     'LUCKNOW        DELHI                 6HRS                222',
+     'AGRA           BHOPAL                6HRS                758',
+     'DELHI          MUMBAI                7HRS                976']
+    ac=ab[0]#bookid
+    ad=ab[1]#journo
+    ae=ab[2]#class
+    af=ab[3]#meal
+    ag=ab[4]#no. of tickets
+    ah=ab[5]#fare
+   # ai=j[ad]#desination
+    print("BOOKING ID:",ac)
+    print("="*80)
+    print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
+    if ad==1:
+        print(j[0])
+        print("="*80)
+    elif ad==2:
+        print(j[1])
+        print("="*80)
+    elif ad==3:
+        print(j[2])
+        print("="*80)
+    elif ad==4:
+        print(j[3])
+        print("="*80)
+    elif ad==5:
+        print(j[4])
+        print("="*80)
+    elif ad==6:
+        print(j[5])
+        print("="*80)
+    elif ad==7:
+        print(j[6])
+        print("="*80)
+    elif ad==8:
+        print(j[7])
+        print("="*80)
+    if ae==1:
+        clss="ECONOMY CLASS"
+    else:
+        clss="BUSINESS CLASS"
+    print("CLASS: ",clss)
+    print("="*80)
+    if af==1:
+        meal="YES"
+    else:
+        meal="NO"
+    print("IN-FLIGHT MEAL: ",meal)
+    print("="*80)
+    print("NUMBER OF TICKETS: ",ag)
+    print("="*80)
+    print("TOTAL FARE: ",ah)
+    print("="*80)
+    print("DO YOU REALLY WANT TO CANCEL YOUR BOOKING?")
+    print("TYPE YES TO CONFIRM OR NO TO CANCEL")
+    aj=input("ENTER YOUR CHOICE: ")
+    if aj.lower()=="yes":
+        sql9="delete  from details where bookid={}"
+        sql10=sql9.format(r)
+        crr.execute(sql10)
+        sql11="delete from booking where bookid={}"
+        sql12=sql11.format(r)
+        crr.execute(sql12)
+        print("YOUR BOOKING HAS BEEN CANCELLED SUCCESSFULLY")
+        print("="*80)
+    elif aj.lower()=="no":
+        print("THANK YOU")
+        print("="*80)
+        sys.exit()
+    else:
+        ("ENTER APPROPRIATE VALUE")
 
 #starting
 def start():
@@ -209,15 +355,20 @@ def start():
     print("WHAT YOU WANT TO DO ?")
     print("1.BOOKING")
     print('2.CANCELLATION')
-    print('Press another ke to EXIT')
+    print('Enter any other value to EXIT')
     a = int(input("Choose an Option: "))
     if a == 1:
         book()
+        ask()
     elif a == 2:
-        None #cancel()
+        cancel()
     else:
          print("=" * 80)
-         print("Enter appropriate option")
+         sys.exit()
          start()
 start()
-ask()
+
+'''
+conn.commit()
+cursor.close()
+conn.close()'''
