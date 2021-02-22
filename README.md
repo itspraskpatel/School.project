@@ -15,6 +15,11 @@ pip(python version) install mysql-connector-python
 Or 
 Google it yourself
 
+Also install
+smtplib, ssl
+By running:
+python -m smtpd -c DebuggingServer -n localhost:1025
+
 If you get error try to update your pip version
 
 You must be connected to internet for this
