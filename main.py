@@ -3,10 +3,7 @@ import datetime
 import time
 import sys
 import mysql.connector as pysq
-#setting up sql
-#conn=pysq.connect(host='localhost',user='root',passwd='')
-#print(conn.is_connected()) will be True
-#crr=conn.cursor()
+import smtplib, ssl
 
 print('AIRPORTS ARE RUNNING AT LOW CAPACITY DUE TO THE PANDEMIC')
 print("**********DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT")
@@ -69,6 +66,7 @@ def book():
         fare = farel[7]
 
 #flight class
+    mail=input("Enter your e-mail ID")
     print("=" * 80)
     print('SELECT CLASS OF YOUR JOURNEY')
     print('1. ECONOMY CLASS')
@@ -186,6 +184,7 @@ def book():
     sql1="insert into booking (bookid,jour_no,class,meal,tick_no,fare)values({},{},{},{},{},{})"
     sql1_=sql1.format(bokid,b,c,d,e,sfare)
     crr.execute(sql1_)
+    conn.commit()
     sql2="create table if not exists details(sn_no int(5) primary key,name varchar(20),dob varchar(15),gender char(1),bookid varchar(15) REFERENCES booking(bookid))"
     crr.execute(sql2)
  #  print(ll)
@@ -228,19 +227,39 @@ def book():
       #  print(fmax,"---------------------------------fmax")
         sql4="insert into details (sn_no,name,dob,gender,bookid)values({},'{}',{},'{}',{})"
         sql5=sql4.format(fmax,sqname,sqdob,sqgender,bokid)
-       # print(sql5)
         crr.execute(sql5)
+        conn.commit()
 
    # print("maxxxxxxxxxxxxxxxxxxxxxxxx=",fmax)
-"""crr.execute("select * from booking")
-data=crr.fetchall()
-for i in data:
-print(i,"____booking")
+        """crr.execute("select * from booking")
+        data=crr.fetchall()
+        for i in data:
+        print(i,"____booking")"""
 
-crr.execute("select * from details")
-data=crr.fetchall()
-for i in data:
-print(i,"_____detail")"""#just to check
+        crr.execute("select * from details")
+        data=crr.fetchall()
+        for i in data:
+            print(i,"_____detail")#just to check
+        #mailing
+        try:
+            data1='YOUR BOOKING HAS BEEN PLACED SUCCESSFULLY\n'
+            data2='YOUR BOOOKING ID IS:\n'
+            data3=bokid
+            port = 465  # For SSL
+            smtp_server = "smtp.gmail.com"
+            sender_email = "progpurpose@gmail.com"  # Enter your address
+            receiver_email = "{}".format(mail)  # Enter receiver address
+            password = "programpurpose"
+            message = """\
+            Subject: Flight Booking
+
+            {}{}{}""".format(data1,data2,data3)
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message)
+        except:
+            print('*'*80)
 
 #for another booking
 def ask():
@@ -263,8 +282,17 @@ def cancel():
     print("************************************CANCELLATION*************************************")
     cc="Enter your booking ID to cancel"
     r=input(cc)
+    print("=" * 80)
+    mail=input("Enter your e-mail ID")
+    print("=" * 80)
     sql8="use airport"
     crr.execute(sql8)
+
+    sql9="select count(*) from booking where bookid={}"
+    sql10=sql9.format(r)
+    crr.execute(sql10)
+    am=crr.fetchone()
+
     sql6="select * from booking where bookid={}"
     sql7=sql6.format(r)
     crr.execute(sql7)
@@ -280,75 +308,121 @@ def cancel():
      'LUCKNOW        DELHI                 6HRS                222',
      'AGRA           BHOPAL                6HRS                758',
      'DELHI          MUMBAI                7HRS                976']
-    ac=ab[0]#bookid
-    ad=ab[1]#journo
-    ae=ab[2]#class
-    af=ab[3]#meal
-    ag=ab[4]#no. of tickets
-    ah=ab[5]#fare
-   # ai=j[ad]#desination
-    print("BOOKING ID:",ac)
-    print("="*80)
-    print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
-    if ad==1:
-        print(j[0])
+    try:
+        ac=ab[0]#bookid
+        ad=ab[1]#journo
+        ae=ab[2]#class
+        af=ab[3]#meal
+        ag=ab[4]#no. of tickets
+        ah=ab[5]#fare
+       # ai=j[ad]#desination
+        print("BOOKING ID:",ac)
         print("="*80)
-    elif ad==2:
-        print(j[1])
+        print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
+        if ad==1:
+            print(j[0])
+            print("="*80)
+        elif ad==2:
+            print(j[1])
+            print("="*80)
+        elif ad==3:
+            print(j[2])
+            print("="*80)
+        elif ad==4:
+            print(j[3])
+            print("="*80)
+        elif ad==5:
+            print(j[4])
+            print("="*80)
+        elif ad==6:
+            print(j[5])
+            print("="*80)
+        elif ad==7:
+            print(j[6])
+            print("="*80)
+        elif ad==8:
+            print(j[7])
+            print("="*80)
+        if ae==1:
+            clss="ECONOMY CLASS"
+        else:
+            clss="BUSINESS CLASS"
+        print("CLASS: ",clss)
         print("="*80)
-    elif ad==3:
-        print(j[2])
+        if af==1:
+            meal="YES"
+        else:
+            meal="NO"
+        print("IN-FLIGHT MEAL: ",meal)
         print("="*80)
-    elif ad==4:
-        print(j[3])
+        print("NUMBER OF TICKETS: ",ag)
         print("="*80)
-    elif ad==5:
-        print(j[4])
+        print("TOTAL FARE: ",ah)
         print("="*80)
-    elif ad==6:
-        print(j[5])
-        print("="*80)
-    elif ad==7:
-        print(j[6])
-        print("="*80)
-    elif ad==8:
-        print(j[7])
-        print("="*80)
-    if ae==1:
-        clss="ECONOMY CLASS"
-    else:
-        clss="BUSINESS CLASS"
-    print("CLASS: ",clss)
-    print("="*80)
-    if af==1:
-        meal="YES"
-    else:
-        meal="NO"
-    print("IN-FLIGHT MEAL: ",meal)
-    print("="*80)
-    print("NUMBER OF TICKETS: ",ag)
-    print("="*80)
-    print("TOTAL FARE: ",ah)
-    print("="*80)
-    print("DO YOU REALLY WANT TO CANCEL YOUR BOOKING?")
-    print("TYPE YES TO CONFIRM OR NO TO CANCEL")
-    aj=input("ENTER YOUR CHOICE: ")
-    if aj.lower()=="yes":
-        sql9="delete  from details where bookid={}"
-        sql10=sql9.format(r)
-        crr.execute(sql10)
-        sql11="delete from booking where bookid={}"
-        sql12=sql11.format(r)
-        crr.execute(sql12)
-        print("YOUR BOOKING HAS BEEN CANCELLED SUCCESSFULLY")
-        print("="*80)
-    elif aj.lower()=="no":
-        print("THANK YOU")
-        print("="*80)
-        sys.exit()
-    else:
-        ("ENTER APPROPRIATE VALUE")
+        print("DO YOU REALLY WANT TO CANCEL YOUR BOOKING?")
+        print("TYPE YES TO CONFIRM OR NO TO CANCEL")
+        aj=input("ENTER YOUR CHOICE: ")
+        if aj.lower()=="yes":
+            sql9="delete  from details where bookid={}"
+            sql10=sql9.format(r)
+            crr.execute(sql10)
+            sql11="delete from booking where bookid={}"
+            sql12=sql11.format(r)
+            crr.execute(sql12)
+            print("YOUR BOOKING HAS BEEN CANCELLED SUCCESSFULLY")
+            bid=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            canid=""
+            for i in bid:
+                if i.isdigit():
+                    canid+=i
+#mail
+            try:
+                data1='\nYOUR BOOKING HAS BEEN CANCELLED SUCCESSFULLY\n'
+                data2='YOUR CANCELLATION ID IS:\n'
+                data3=canid
 
+                port = 465  # For SSL
+                smtp_server = "smtp.gmail.com"
+                sender_email = "progpurpose@gmail.com"  # Enter your address
+                receiver_email = "{}".format(mail)  # Enter receiver address
+                password = "programpurpose"
+                message = """\
+                Subject: Flight Booking
+
+                {}{}{}""".format(data1,data2,data3)
+                context = ssl.create_default_context()
+                with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                    server.login(sender_email, password)
+                    server.sendmail(sender_email, receiver_email, message)
+            except:
+                print('*'*80)
+            #######################
+            crr.execute("select * from details")
+            data=crr.fetchall()
+            for i in data:
+                print(i,"_____detail")#just to check
+            ##########################
+            print("="*80)
+        elif aj.lower()=="no":
+            print("THANK YOU")
+            print("="*80)
+            sys.exit()
+        else:
+            ("ENTER APPROPRIATE VALUE")
+        print("Do You want to do any other BOOKING/CANCELLATION?")
+        print("Enter Y/N")
+        al=input("Enter your choice")
+        if al=="y" or al=="Y":
+            start()
+        elif al=="n" or al=='N':
+            sys.exit()
+        else:
+            print("Enter correct Choice")
+    except TypeError:
+        print("No Bookings found on this booking ID")
+        print("="*80)
+        print("="*80)
+        cancel()
 #starting
 def start():
     print("=" * 80)
@@ -356,11 +430,11 @@ def start():
     print("1.BOOKING")
     print('2.CANCELLATION')
     print('Enter any other value to EXIT')
-    a = int(input("Choose an Option: "))
-    if a == 1:
+    a = input("Choose an Option: ")
+    if a == "1":
         book()
         ask()
-    elif a == 2:
+    elif a == "2":
         cancel()
     else:
          print("=" * 80)
@@ -372,3 +446,6 @@ start()
 conn.commit()
 cursor.close()
 conn.close()'''
+
+#install this via cmd:
+#python -m smtpd -c DebuggingServer -n localhost:1025
