@@ -174,6 +174,7 @@ def book():
                 print('DATE OF BIRTH: ', lst[1])
             elif len(lst) == 3:
                 print('GENDER: ', lst[2].upper())
+                print("=" * 80)
     print("=" * 80)
     print("ABOVE ARE THE DEATILS OF THE PASSENGER")
 
@@ -287,8 +288,8 @@ def book():
                 server.sendmail(sender_email, receiver_email, message)
         except:
             print('=' * 80)
-        crr.close()
-        conn.close()
+    crr.close()
+    conn.close()
 
 
 # for another booking
@@ -476,6 +477,8 @@ def start():
         print("=" * 80)
         sys.exit()
         start()
+
+
 start()
 # install this via cmd:
 # python -m smtpd -c DebuggingServer -n localhost:1025
