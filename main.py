@@ -4,24 +4,33 @@ import sys
 import mysql.connector as pysq
 import smtplib, ssl
 
-print('**********AIRPORTS ARE RUNNING AT LOW CAPACITY DUE TO THE PANDEMIC**********')
-print("**********DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT**********")
+print('*****AIRPORTS ARE RUNNING AT LOW CAPACITY****')
+print("*****DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT*****")
+print()
+print("YOUR ARE GOING TO ENTER MAIN MENU IN:")
 
 # delay
-time.sleep(1)
+import time
 
+T = 10
+while T > 0:
+    print(T, " ", end='\r')
+    T -= 1
+    time.sleep(1)
+print()
+print("=" * 80)
 # list of places
-j = ["1. DELHI           AGRA                12HRS                222",
-     "2. AGRA           LUCKNOW              13HRS                555",
-     '3. LUCKNOW        BANGALORE            23HRS                230',
-     '4. DELHI          LUCKNOW              33HRS                556',
-     '5. BANGLORE       GORAKHPUR             5HRS                565',
-     '6. LUCKNOW        DELHI                 6HRS                222',
-     '7. AGRA           BHOPAL                6HRS                758',
-     '8. DELHI          MUMBAI                7HRS                976']
+j = ["1. DELHI           AGRA                01HRS                177",
+     "2. AGRA           LUCKNOW               3HRS                293",
+     '3. LUCKNOW        BANGALORE            05HRS                1830',
+     '4. DELHI          LUCKNOW             2.5HRS                556',
+     '5. BANGALORE      GORAKHPUR             5HRS                1948',
+     '6. LUCKNOW        PUNE                 04HRS                447',
+     '7. AGRA           JAIPUR               01HRS                222',
+     '8. DELHI          MUMBAI              2.5HRS                1148']
 
 # fare as list
-farel = [1111, 2222, 3333, 4444, 5555, 6666, 7777, 8888]
+farel = [2669, 5753, 5673, 3129, 5021, 5999, 2513, 4270]
 
 
 # creating function for booking
@@ -180,24 +189,25 @@ def book():
 
     # fare calculation
     if d == 1 and c == 1:
-        print("Total fare: ", int(fare + fare / 10) * e)
+        print("Total fare: ", int(fare + fare // 10) * e)
         sfare = int(fare + fare / 10) * e
     elif d == 1 and c == 2:
-        print("Total fare: ", int(fare + fare / 10 + fare / 10) * e)
-        sfare = int(fare + fare / 10 + fare / 10) * e
+        print("Total fare: ", int(fare + fare // 10 + fare // 10) * e)
+        sfare = int(fare + fare // 10 + fare // 10) * e
     elif d == 2 and c == 1:
         print("Total fare: ", int(fare) * e)
         sfare = int(fare) * e
     elif d == 2 and c == 2:
-        print("Total fare: ", int(fare + fare / 10) * e)
-        sfare = int(fare + fare / 10) * e
+        print("Total fare: ", int(fare + fare // 10) * e)
+        sfare = int(fare + fare // 10) * e
     try:
-        qq = input("ENTER 'Y' TO CONFIRM: ")
+        qq = input("ENTER 'Y' TO CONFIRM OR 'N' TO EXIT: ")
     except:
         print("ENTER APPROPRIATE OPTION")
         book()
     print("=" * 80)
-    if qq.lower() == 'y':
+    qql = qq.lower()
+    if qql == 'y':
         print("YOUR BOOKING HAS BEEN PLACED SUCCESSFULLY")
         bid = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         bokid = ""
@@ -205,6 +215,13 @@ def book():
             if i.isdigit():
                 bokid += i
         print("YOUR BOOKING ID IS: ", bokid)
+        print("=" * 80)
+    elif qql == 'n':
+        print("YOUR BOOKING HAS NOT BEEN PLACED")
+        print("THANK YOU")
+        print("=" * 80)
+        print("=" * 80)
+        sys.exit()
     else:
         print("ENTER APPROPRIATE VALUE")
         book()
@@ -299,6 +316,8 @@ def ask():
         book()
     elif bb.lower() == "n":
         print("THANK YOU")
+        print("=" * 80)
+        print("=" * 80)
     else:
         print("Enter appropriate value")
         ask()
@@ -319,12 +338,14 @@ def cancel():
     print("=" * 80)
     sql8 = "use airport"
     crr.execute(sql8)
-
     sql9 = "select count(*) from booking where bookid={}"
     sql10 = sql9.format(r)
     crr.execute(sql10)
     am = crr.fetchone()
-
+    if am == (1,):
+        amm = 'yes'
+    else:
+        amm = 'no'
     sql6 = "select * from booking where bookid={}"
     sql7 = sql6.format(r)
     crr.execute(sql7)
@@ -333,14 +354,14 @@ def cancel():
     print("=" * 80)
 
     # journey destinations
-    j = ["DELHI           AGRA                12HRS                222",
-         "AGRA           LUCKNOW              13HRS                555",
-         'LUCKNOW        BANGALORE            23HRS                230',
-         'DELHI          LUCKNOW              33HRS                556',
-         'BANGLORE       GORAKHPUR             5HRS                565',
-         'LUCKNOW        DELHI                 6HRS                222',
-         'AGRA           BHOPAL                6HRS                758',
-         'DELHI          MUMBAI                7HRS                976']
+    j = ["DELHI           AGRA                01HRS                177",
+         "AGRA           LUCKNOW               3HRS                293",
+         'LUCKNOW        BANGALORE            05HRS                1830',
+         'DELHI          LUCKNOW             2.5HRS                556',
+         'BANGALORE      GORAKHPUR             5HRS                1948',
+         'LUCKNOW        PUNE                 04HRS                447',
+         'AGRA           JAIPUR               01HRS                222',
+         'DELHI          MUMBAI              2.5HRS                1148']
     try:
         ac = ab[0]  # bookid
         ad = ab[1]  # journo
@@ -393,6 +414,7 @@ def cancel():
         print("TOTAL FARE: ", ah)
         print("=" * 80)
         print("DO YOU REALLY WANT TO CANCEL YOUR BOOKING?")
+        print("=" * 80)
         print("TYPE YES TO CONFIRM OR NO TO CANCEL")
         aj = input("ENTER YOUR CHOICE: ")
         if aj.lower() == "yes":
@@ -403,6 +425,7 @@ def cancel():
             sql12 = sql11.format(r)
             crr.execute(sql12)
             print("YOUR BOOKING HAS BEEN CANCELLED SUCCESSFULLY")
+            print("=" * 80)
             bid = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             canid = ""
             for i in bid:
@@ -428,7 +451,7 @@ def cancel():
                     server.login(sender_email, password)
                     server.sendmail(sender_email, receiver_email, message)
             except:
-                print('*' * 80)
+                print('=' * 80)
             """crr.execute("select * from details")
             data=crr.fetchall()
             for i in data:
@@ -444,9 +467,14 @@ def cancel():
         print("DO YOU WANT ANY OTHER BOOKING/CANCELLATION?")
         print("Enter Y/N")
         al = input("ENTER YOUR CHOICE: ")
-        if al == "y" or al == "Y":
+        if al == "y":
             start()
-        elif al == "n" or al == 'N':
+        elif al == "Y":
+            start()
+        elif al == "n":
+            print("THANK YOU")
+            sys.exit()
+        elif al == "N":
             print("THANK YOU")
             sys.exit()
         else:
@@ -462,7 +490,6 @@ def cancel():
 
 # starting
 def start():
-    print("=" * 80)
     print("WHAT YOU WANT TO DO ?")
     print("1.BOOKING")
     print('2.CANCELLATION')
@@ -476,7 +503,7 @@ def start():
     else:
         print("=" * 80)
         sys.exit()
-        start()
+
 
 start()
 # install this via cmd:
