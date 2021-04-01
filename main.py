@@ -3,31 +3,31 @@ import time
 import sys
 import mysql.connector as pysq
 import smtplib, ssl
-
-print('*****AIRPORTS ARE RUNNING AT LOW CAPACITY****')
-print("*****DUE TO COVID-19 OUTBREAK WE ARE FOLLOWING GUIDELINES AS PER ORDERED BY THE GOVERNMENT*****")
-print()
-print("YOUR ARE GOING TO ENTER MAIN MENU IN:")
-
-# delay
+from os import system
 import time
 
-T = 10
+# delay
+print("YOUR ARE GOING TO ENTER MAIN MENU IN:")
+T = 8
 while T > 0:
     print(T, " ", end='\r')
     T -= 1
     time.sleep(1)
+system('cls')
+print("***************************************************************************")
+print('***********************WELCOME TO GORAKHPUR AIRLINES***********************')
+print("***************************************************************************")
 print()
-print("=" * 80)
+
 # list of places
-j = ["1. DELHI           AGRA                01HRS                177",
-     "2. AGRA           LUCKNOW               3HRS                293",
-     '3. LUCKNOW        BANGALORE            05HRS                1830',
-     '4. DELHI          LUCKNOW             2.5HRS                556',
-     '5. BANGALORE      GORAKHPUR             5HRS                1948',
-     '6. LUCKNOW        PUNE                 04HRS                447',
-     '7. AGRA           JAIPUR               01HRS                222',
-     '8. DELHI          MUMBAI              2.5HRS                1148']
+j = ["1.   DELHI           AGRA                01HRS                177",
+     "2.   AGRA           LUCKNOW               3HRS                293",
+     '3.   LUCKNOW        BANGALORE            05HRS                1830',
+     '4.   DELHI          LUCKNOW             2.5HRS                556',
+     '5.   BANGALORE      GORAKHPUR             5HRS                1948',
+     '6.   LUCKNOW        PUNE                 04HRS                447',
+     '7.   AGRA           JAIPUR               01HRS                222',
+     '8.   DELHI          MUMBAI              2.5HRS                1148']
 
 # fare as list
 farel = [2669, 5753, 5673, 3129, 5021, 5999, 2513, 4270]
@@ -42,9 +42,9 @@ def book():
 
     # code
     print("=" * 80)
-    print("WELCOME TO BOOKING SECTION")
+    print("                       WELCOME TO BOOKING SECTION")
     print("=" * 80)
-    print("ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
+    print("     ORIGIN         DESTINATION         TIME(in hours)         DISTANCE")
     for i in j:
         print(i)
     print("=" * 80)
@@ -83,11 +83,11 @@ def book():
     mail = input("ENTER YOUR E-MAIL ID: ")
     print("=" * 80)
     print('SELECT CLASS OF YOUR JOURNEY')
-    print('1. ECONOMY CLASS')
-    print('2. BUSINESS CLASS')
-    print("*EXTRA CHARGES WILL BE APPLIED")
+    print('1.  ECONOMY CLASS')
+    print('2.  BUSINESS CLASS')
+    print()
     print("ENTER 1 OR 2 ")
-    print("")
+    print()
     try:
         c = int(input("WHAT'S YOUR CHOICE?: "))
         if c > 2:
@@ -102,11 +102,12 @@ def book():
     # flight meal
     print("=" * 80)
     print("DO YOU WANT IN-FLIGHT MEAL SERVICES ON YOUR JOURNEY?")
-    print("*EXTRA CHARGES WILL BE APPLIED")
     print("")
-    print('1. YES, I WANT')
-    print("2. NO, I DON'T WANT")
+    print('1.  I WANT')
+    print("2.  I DON'T WANT")
+    print()
     print("ENTER 1 OR 2")
+    print()
     try:
         d = int(input("WHAT'S YOUR CHOICE?: "))
         if d > 2:
@@ -139,8 +140,10 @@ def book():
     if str(e).isdigit():
         for k in range(e):
             f = input("ENTER NAME OF PASSENGER: ")
+            print("=" * 80)
             try:
                 g1 = input("ENTER DATE OF BIRTH IN DD/MM/YYYY (use /): ")
+                print("=" * 80)
                 g2 = g1.split('/')
                 g = ''
                 for gg in g2:
@@ -202,14 +205,15 @@ def book():
     elif d == 2 and c == 2:
         print("Total fare: ", int(fare + fare // 10) * e)
         sfare = int(fare + fare // 10) * e
+    print("=" * 80)
     try:
-        qq = input("ENTER 'Y' TO CONFIRM OR 'N' TO EXIT: ")
+        qq = input("ENTER '1' TO CONFIRM OR '2' TO EXIT: ")
     except:
         print("ENTER APPROPRIATE OPTION")
         book()
     print("=" * 80)
     qql = qq.lower()
-    if qql == 'y':
+    if qql == '1':
         print("YOUR BOOKING HAS BEEN PLACED SUCCESSFULLY")
         bid = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         bokid = ""
@@ -218,7 +222,7 @@ def book():
                 bokid += i
         print("YOUR BOOKING ID IS: ", bokid)
         print("=" * 80)
-    elif qql == 'n':
+    elif qql == '2':
         print("YOUR BOOKING HAS NOT BEEN PLACED")
         print("THANK YOU")
         print("=" * 80)
@@ -332,11 +336,13 @@ def cancel():
     # print(conn.is_connected()) will be True
     crr = conn.cursor()
 
+    print()
     print("************************************CANCELLATION*************************************")
-    cc = "Enter your booking ID to cancel"
+    print()
+    cc = "Enter your booking ID to cancel:   "
     r = input(cc)
     print("=" * 80)
-    mail = input("Enter your e-mail ID")
+    mail = input("Enter your e-Mail ID:   ")
     print("=" * 80)
     sql8 = "use airport"
     crr.execute(sql8)
@@ -489,24 +495,25 @@ def cancel():
     crr.close()
     conn.close()
 
-
 # starting
 def start():
     print("WHAT YOU WANT TO DO ?")
-    print("1.BOOKING")
-    print('2.CANCELLATION')
-    print('ENTER ANY OTHER VALUE TO EXIT')
+    print("1.  BOOKING")
+    print('2.  CANCELLATION')
+    print('3.  EXIT')
+    print()
     a = input("CHOOSE AN OPTION: ")
     if a == "1":
         book()
         ask()
     elif a == "2":
         cancel()
-    else:
+    elif a == "3":
         print("=" * 80)
         sys.exit()
-
-
+    else:
+        print()
+        print("Enter correct value")
+        start()
 start()
-# install this via cmd:
-# python -m smtpd -c DebuggingServer -n localhost:1025
+'''End of Program'''
